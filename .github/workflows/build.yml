@@ -3,7 +3,7 @@ name: Build and push Redirect
 on:
   push:
     branches:
-      - devredirect
+      - dev
 
 jobs:
 
@@ -16,6 +16,7 @@ jobs:
 
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -24,7 +25,9 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/redirect:latest -f docker/redirect/Dockerfile .
+          docker build \
+          -t ghcr.io/${{ github.repository }}/redirect:latest .
+
       - name: Push image
         run: |
           docker push ghcr.io/${{ github.repository }}/redirect:latest
