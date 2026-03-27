@@ -24,4 +24,4 @@ async def redirect_link(
     )
 
     # Редирект на оригинальный URL из items
-    return RedirectResponse(url=item.original_url)
+    return RedirectResponse(url=item.description)
