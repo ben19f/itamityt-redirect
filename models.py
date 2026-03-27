@@ -1,39 +1,14 @@
 from sqlalchemy import Column, String, Integer, Text, TIMESTAMP, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+
 Base = declarative_base()
-
-# class Link(Base):
-#     __tablename__ = "links"
-#
-#     id = Column(Integer, primary_key=True, index=True)
-#     link_id = Column(String(50), unique=True, index=True, nullable=False)
-#     original_url = Column(Text, nullable=False)
-#     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
-#     owner_user_id = Column(Integer, nullable=True)  # если нужно привязать к пользователю
-
-class Click(Base):
-    __tablename__ = "clicks"
-
-    id = Column(Integer, primary_key=True, index=True)
-    link_id = Column(String(50), ForeignKey("links.link_id"))
-    timestamp = Column(TIMESTAMP(timezone=True), server_default=func.now())
-    ip = Column(String(50))
-    user_agent = Column(Text)
-
-
 
 class User(Base):
     __tablename__ = "users"
-
     id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-
-    items = relationship("Item", back_populates="user", cascade="all, delete-orphan")
-
-
+    username = Column(String(50))
+    items = relationship("Item", back_populates="user")
 
 class Item(Base):
     __tablename__ = "items"
@@ -46,4 +21,16 @@ class Item(Base):
     owner_user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", back_populates="items")
 
-    created_at = Column(String, server_default=func.now())
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    clicks = relationship("Click", back_populates="item")  # связь с кликами
+
+class Click(Base):
+    __tablename__ = "clicks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    link_id = Column(String(50), ForeignKey("items.link_id"))  # теперь FK на items
+    timestamp = Column(TIMESTAMP(timezone=True), server_default=func.now())
+    ip = Column(String(50))
+    user_agent = Column(Text)
+
+    item = relationship("Item", back_populates="clicks")
