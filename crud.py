@@ -1,25 +1,21 @@
-from models import Link, Click
+from models import Item, Click
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from fastapi import HTTPException
 
-async def get_link(db: AsyncSession, link_id: str):
-    result = await db.execute(select(Link).where(Link.link_id == link_id))
-    return result.scalars().first()
+
+async def get_item_by_link(db: AsyncSession, link_id: str):
+    """Находит Item по link_id"""
+    result = await db.execute(select(Item).filter_by(link_id=link_id))
+    item = result.scalar()
+    if not item:
+        raise HTTPException(status_code=404, detail="Link not found")
+    return item
+
 
 async def log_click(db: AsyncSession, link_id: str, ip: str, user_agent: str):
+    """Логирует клик на ссылку в таблицу clicks"""
     click = Click(link_id=link_id, ip=ip, user_agent=user_agent)
     db.add(click)
     await db.commit()
     return click
-
-async def create_link(db: AsyncSession, link_id: str, original_url: str, owner_user_id: int | None = None):
-    from sqlalchemy.exc import IntegrityError
-    new_link = Link(link_id=link_id, original_url=original_url, owner_user_id=owner_user_id)
-    db.add(new_link)
-    try:
-        await db.commit()
-        await db.refresh(new_link)
-    except IntegrityError:
-        await db.rollback()
-        raise
-    return new_link

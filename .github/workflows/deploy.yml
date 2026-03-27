@@ -26,8 +26,8 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ghcr.io/${{ github.repository }}/redirect:v0.0.1 .
+          -t ghcr.io/${{ github.repository }}/redirect:v0.1.0 .
 
       - name: Push image
         run: |
-          docker push ghcr.io/${{ github.repository }}/redirect:v0.0.1
+          docker push ghcr.io/${{ github.repository }}/redirect:v0.1.0
