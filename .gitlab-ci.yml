@@ -37,7 +37,7 @@ update-infra:
 
     - git checkout forhelm
 
-    - yq e '.frontend.image = "192.168.96.116:5000/app/redirect:'"$CI_COMMIT_TAG"'"' -i values-dev.yaml
+    - yq e '.redirect.image = "192.168.96.116:5000/app/redirect:'"$CI_COMMIT_TAG"'"' -i values-dev.yaml
 
     - git config user.email "ci@bot.com"
     - git config user.name "ci-bot"
