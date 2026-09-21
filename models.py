@@ -43,6 +43,6 @@ class Click(Base):
         ForeignKey("items.link_id")
     )
 
-    user_agent = Column(Text)
+    # user_agent = Column(Text)
 
     item = relationship("Item", back_populates="clicks")
