@@ -43,8 +43,14 @@ class Click(Base):
         ForeignKey("items.link_id"),
         index=True,
     )
-    ip_address = Column(String(45), nullable=True)
-    user_agent = Column(Text, nullable=True)
-    clicked_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    # Explicit DB column names must match the deployed Alembic migration.
+    ip_address = Column("ip_address", String(45), nullable=True)
+    user_agent = Column("user_agent", Text, nullable=True)
+    clicked_at = Column(
+        "clicked_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
 
     item = relationship("Item", back_populates="clicks")
