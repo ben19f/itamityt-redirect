@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Text, ForeignKey
+from sqlalchemy import Column, String, Integer, Text, ForeignKey, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -40,9 +40,11 @@ class Click(Base):
 
     link_id = Column(
         String(50),
-        ForeignKey("items.link_id")
+        ForeignKey("items.link_id"),
+        index=True,
     )
-
-    # user_agent = Column(Text)
+    ip_address = Column(String(45), nullable=True)
+    user_agent = Column(Text, nullable=True)
+    clicked_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
     item = relationship("Item", back_populates="clicks")
