@@ -13,11 +13,16 @@ async def get_item_by_link(db: AsyncSession, link_id: str):
     return item
 
 
-async def log_click(db: AsyncSession, link_id: str, ip: str | None, user_agent: str | None):
+async def log_click(
+    db: AsyncSession,
+    link_id: str,
+    ip_address: str | None,
+    user_agent: str | None,
+):
     """Логирует клик на ссылку в таблицу clicks"""
     click = Click(
         link_id=link_id,
-        ip_address=ip,
+        ip_address=ip_address,
         user_agent=user_agent,
     )
     db.add(click)
